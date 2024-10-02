@@ -1,0 +1,89 @@
+import lightgbm as lgb
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import 
+
+
+
+'''
+import pandas as pd
+
+# Load the CSV file
+df = pd.read_csv('Luka_data_w_home_games.csv')
+
+# Create lag features for points (PTS)
+num_lags = 5
+for lag in range(1, num_lags + 1):
+    df[f'PTS_Lag_{lag}'] = df['PTS'].shift(lag)
+
+# Drop rows with NaN values (which will be the first 'num_lags' rows)
+df = df.dropna()
+
+# Encode the opponent team as a categorical feature
+df = pd.get_dummies(df, columns=['MATCHUP'], drop_first=True)
+
+# Extract month from the game date
+df['GAME_DATE'] = pd.to_datetime(df['GAME_DATE'])
+df['Month'] = df['GAME_DATE'].dt.month
+
+# Encode the home/away games
+df['isHomeGame'] = df['isHomeGame'].astype(int)
+
+# Save the transformed data to a new CSV file
+df.to_csv('Luka_data_with_qualitative_features.csv', index=False)
+
+'''
+
+'''
+PREPARE DATA FOR LIGHTGBM:
+import lightgbm as lgb
+from sklearn.model_selection import train_test_split
+
+# Load the transformed data
+df = pd.read_csv('Luka_data_with_qualitative_features.csv')
+
+# Define the features and target
+features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
+           [col for col in df.columns if 'MATCHUP_' in col] + \
+           ['Month', 'isHomeGame']
+target = 'PTS'
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(df[features], df[target], test_size=0.2, random_state=42)
+
+# Create the LightGBM dataset
+train_data = lgb.Dataset(X_train, label=y_train)
+test_data = lgb.Dataset(X_test, label=y_test)
+
+# Define the parameters for the LightGBM model
+params = {
+    'objective': 'regression',
+    'metric': 'rmse',
+    'boosting_type': 'gbdt',
+    'num_leaves': 31,
+    'learning_rate': 0.05,
+    'feature_fraction': 0.9
+}
+
+# Train the LightGBM model
+model = lgb.train(params, train_data, valid_sets=[test_data], num_boost_round=1000, early_stopping_rounds=10)
+
+# Save the model
+model.save_model('lightgbm_model_with_qualitative_features.txt')
+
+'''
+
+
+'''
+MAKE PREDICTIONS:
+# Load the model
+model = lgb.Booster(model_file='lightgbm_model_with_qualitative_features.txt')
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Evaluate the model
+from sklearn.metrics import mean_squared_error
+rmse = mean_squared_error(y_test, predictions, squared=False)
+print(f'RMSE: {rmse}')
+'''
