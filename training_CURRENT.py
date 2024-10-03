@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score, mean_squared_error
 
 # Load the CSV file
-df = pd.read_csv('Luka_data_w_home_games.csv')
+df = pd.read_csv('Luka_data_with_projections.csv')
 
 # Create lag features for points (PTS)
 num_lags = 5
@@ -37,7 +37,7 @@ df['isHomeGame'] = df['isHomeGame'].astype(int)
 features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
            [col for col in df.columns if 'MATCHUP_' in col] + \
            ['Month', 'isHomeGame']
-target = 'PTS'
+target = 'Beats_Projected_Line'
 
 
 
