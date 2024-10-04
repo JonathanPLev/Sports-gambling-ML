@@ -30,13 +30,28 @@ df['Month'] = df['GAME_DATE'].dt.month
 # Encode the home/away games
 df['isHomeGame'] = df['isHomeGame'].astype(int)
 
+
+# Calculate lag features
+for stat in ['PTS', 'FGM', 'FGA', 'AST', 'REB']:
+    for lag in range(1, 6):
+        df[f'{stat}_Lag_{lag}'] = df[stat].shift(lag)
+
+# Calculate rolling averages
+for stat in ['PTS', 'FGM', 'FGA', 'AST', 'REB']:
+    df[f'{stat}_Rolling_Avg_5'] = df[stat].rolling(window=5).mean()
+
+
 # Save the transformed data to a new CSV file
-df.to_csv('Luka_data_with_qualitative_features.csv', index=False)
+df.to_csv('Luka_data_with_qualitative_features_updated.csv', index=False)
 
 # Define the features and target
 features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
            [col for col in df.columns if 'MATCHUP_' in col] + \
-           ['Month', 'isHomeGame']
+           [f'FGM_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
+           [f'FGA_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
+           [f'AST_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
+           [f'REB_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
+           ['Month', 'isHomeGame', 'Projected_Line']
 target = 'Beats_Projected_Line'
 
 
@@ -61,8 +76,8 @@ test_data = lgb.Dataset(X_test, label=y_test)
 
 # Define the parameters for the LightGBM model
 params = {
-    'objective': 'binary',
-    'metric': 'binary_logloss',
+    'objective': 'binary', # regression or binary
+    'metric': 'binary_logloss', # RMSE or binary_logloss
     'boosting_type': 'gbdt',
     'num_leaves': 31,
     'learning_rate': 0.05,
