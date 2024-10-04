@@ -31,13 +31,24 @@ df['Month'] = df['GAME_DATE'].dt.month
 df['isHomeGame'] = df['isHomeGame'].astype(int)
 
 # Save the transformed data to a new CSV file
-# df.to_csv('Luka_data_with_qualitative_features.csv', index=False)
+df.to_csv('Luka_data_with_qualitative_features.csv', index=False)
 
 # Define the features and target
 features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
            [col for col in df.columns if 'MATCHUP_' in col] + \
            ['Month', 'isHomeGame']
 target = 'Beats_Projected_Line'
+
+
+# # Columns to drop
+# drop_columns = ['Unnamed: 0.1', 'Unnamed: 0']
+
+# # Check for existing columns and drop if found
+# existing_columns = [col for col in drop_columns if col in df.columns]
+
+# # Drop the existing columns if any are found
+# if existing_columns:
+#     df.drop(existing_columns, inplace=True)
 
 
 
@@ -50,8 +61,8 @@ test_data = lgb.Dataset(X_test, label=y_test)
 
 # Define the parameters for the LightGBM model
 params = {
-    'objective': 'regression',
-    'metric': 'rmse',
+    'objective': 'binary',
+    'metric': 'binary_logloss',
     'boosting_type': 'gbdt',
     'num_leaves': 31,
     'learning_rate': 0.05,
@@ -91,3 +102,6 @@ print(f'RMSE: {rmse}')
 # from sklearn.metrics import mean_squared_error
 # rmse = mean_squared_error(y_test, predictions, squared=False)
 # print(f'RMSE: {rmse}')
+
+
+    
