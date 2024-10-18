@@ -8,9 +8,9 @@ from sklearn.metrics import classification_report, roc_auc_score
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-df = pd.read_csv("Luka_data_with_qualitative_features_updated.csv")
+df = pd.read_csv("Luka_data_with_qualitative_features_updated2.csv")
 
-num_lags = 5
+num_lags = 20
 features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
            [col for col in df.columns if 'MATCHUP_' in col] + \
            [f'FGM_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
@@ -21,8 +21,9 @@ features = [f'PTS_Lag_{lag}' for lag in range(1, num_lags + 1)] + \
 
 from sklearn.model_selection import train_test_split
 
-X = df[features]
-y = df['Beats_Projected_Line']
+df_subset = df.iloc[20:]
+X = df_subset[features]
+y = df_subset['Beats_Projected_Line']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 

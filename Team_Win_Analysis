@@ -1,0 +1,10 @@
+import pandas as pd
+
+def get_stats(start_szn, end_szn):
+    df = pd.read_csv("/NBA-dataset-stats-player-team/team/team_stats_traditional_rs.csv")
+
+    filtered_df = df[df['SEASON'].between[start_szn, end_szn]]
+
+    return filtered_df[['TEAM_NAME', 'W', 'L', 'PLUS_MINUS']]
+
+
