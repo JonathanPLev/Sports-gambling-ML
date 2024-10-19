@@ -2,3 +2,5 @@
 /venv3
 **.csv
 /NBA-dataset-stats-player-team
+/AutogluonModels
+/__pycache__
