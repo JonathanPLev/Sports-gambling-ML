@@ -37,4 +37,12 @@ Step 0: Create a python venv, and pip install pandas, nba-api that is found here
 
 Step 1: Follow steps in nba_api to get a player's game stats. Use 'call_endpt_CURRENT.py' to scrape data from NBA API. Then use 'Luka_data_CURRENT.py' for creating labels and projections.
 
-Step 2: training_lightgbm.py holds continued data analalysis. Current most accurate model is Autogluon model, with .7328 accuracy prediction.
+Step 2: training_lightgbm.py holds continued data analysis. Run that, then use the .csv from Current most accurate model is Autogluon model, with .7328 accuracy prediction.
+
+
+Step 0: Create a python venv, and pip install pandas, nba-api that is found here: https://github.com/swar/nba_api, scikit-learn, autogluon, lightgbm. There may be a few more dependencies that I've missed that need to be pip installed. also git clone https://github.com/Brescou/NBA-dataset-stats-player-team.
+
+Step 1: Run call_endpt_CURRENT.py
+Step 2: Run Luka_data_CURRENT.py
+Step 3: Run training_lightgbm.py
+Step 4: You now have the full data necessary, and you can run autogluon and RF training files.

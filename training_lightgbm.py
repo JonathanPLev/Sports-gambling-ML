@@ -13,7 +13,7 @@ from team_name_map import team_name_map
 # Load the CSV file
 df = pd.read_csv('training_data/Luka_data_with_projections.csv')
 
-# Create lag features for points (PTS)
+# Create lag features for pointsƒ (PTS)
 num_lags = 20
 for lag in range(1, num_lags + 1):
     df[f'PTS_Lag_{lag}'] = df['PTS'].shift(lag)
@@ -64,7 +64,7 @@ def assign_season(date):
 
 # encode matchup, W, L, Plus_minus of opposing team from previous season
 def get_stats(start_szn, end_szn):
-    new_df = pd.read_csv("team_stats_traditional_rs.csv")
+    new_df = pd.read_csv("training_data/team_stats_traditional_rs.csv")
 
     filtered_df = new_df[new_df['SEASON'].between(start_szn, end_szn)]
 
@@ -89,7 +89,7 @@ merged_df = pd.merge(
     df,
     team_stats[['TEAM_NAME', 'previous_season', 'W', 'L', 'PLUS_MINUS']],
     left_on=['versus_team', 'SEASON'],
-    right_on=['TEAM_NAME', 'previous_season'],
+    right_on=['TEAM_NAME', 'previous_seasƒon'],
     suffixes=('', '_opponent'),
     how='left'  # Keep all player stats, even if no matching team found
 )

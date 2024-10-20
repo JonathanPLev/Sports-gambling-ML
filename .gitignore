@@ -1,6 +1,6 @@
 /venv2
 /venv3
-**.csv
+/training_data
 /NBA-dataset-stats-player-team
 /AutogluonModels
-/__pycache__
+/__pycache__y
